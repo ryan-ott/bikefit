@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Bikefit</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>Bikefit</h1>
+    <nav role="tablist">
+      <button role="tab" data-tab="capture" aria-selected="true">Capture</button>
+      <button role="tab" data-tab="measure">Measurements</button>
+      <button role="tab" data-tab="sessions">Sessions</button>
+    </nav>
+    <div class="current">Session: <strong id="session-label">…</strong></div>
+  </header>
+
+  <main>
+    <div class="work">
+      <!-- Capture -->
+      <section id="tab-capture" class="tab">
+        <div class="toolbar">
+          <button id="cam-start">Start camera</button>
+          <select id="cam-select" aria-label="Camera" hidden></select>
+          <label class="button">Open video/photo<input id="file-input" type="file" accept="video/*,image/*" hidden></label>
+          <span class="sep"></span>
+          <button id="rec-btn" disabled>● Record 10s</button>
+          <button id="freeze-btn" disabled>Freeze</button>
+          <button id="snap-btn" disabled>Save snapshot</button>
+        </div>
+        <p id="cap-status" class="muted">Film yourself from the side, whole body and bike in frame, pedalling on a trainer.</p>
+        <div class="stage">
+          <canvas id="canvas"></canvas>
+          <video id="video" playsinline muted hidden></video>
+          <div id="stage-empty" class="stage-empty">No camera or file yet</div>
+        </div>
+        <div class="angles-grid" id="live-angles"></div>
+        <h3>Last 10s recording</h3>
+        <div id="recorded" class="muted">Nothing recorded yet. Start pedalling at steady effort, then press Record.</div>
+        <h3>Snapshots</h3>
+        <div id="snapshots" class="thumbs"></div>
+      </section>
+
+      <!-- Measurements -->
+      <section id="tab-measure" class="tab" hidden>
+        <div class="measure-layout">
+          <div id="measure-forms"></div>
+          <aside class="diagram-wrap">
+            <svg id="bike-diagram" viewBox="0 0 400 240" role="img" aria-label="Bike side view with measurement letters A to F">
+              <g class="bike">
+                <circle cx="90" cy="170" r="58"/><circle cx="310" cy="170" r="58"/>
+                <path d="M180 175 L158 92 L282 92 L290 122 L180 175 Z M180 175 L90 170 L158 92 M290 122 L310 170 M282 92 L285 82 L300 78"/>
+                <path d="M300 78 q12 0 12 12 q0 14 -14 12" />
+                <path d="M158 92 L152 64"/><path class="saddle" d="M126 60 L170 60"/>
+                <path d="M180 175 L196 204"/>
+              </g>
+              <g class="dim" id="dim-A"><path d="M180 175 L150 62"/><text x="152" y="125">A</text></g>
+              <g class="dim" id="dim-B"><path d="M180 175 L180 34 M170 40 L180 40"/><text x="168" y="34">B</text></g>
+              <g class="dim" id="dim-C"><path d="M170 24 L300 24 M300 24 L300 76"/><text x="232" y="18">C</text></g>
+              <g class="dim" id="dim-D"><path d="M150 60 L340 60 M300 78 L340 78 M334 60 L334 78"/><text x="344" y="74">D</text></g>
+              <g class="dim" id="dim-E"><path d="M285 82 L370 82 M180 175 L370 175 M362 82 L362 175"/><text x="372" y="132">E</text></g>
+              <g class="dim" id="dim-F"><path d="M180 175 L180 222 M285 82 L285 222 M180 216 L285 216"/><text x="228" y="234">F</text></g>
+            </svg>
+            <p class="muted small">A saddle height (BB centre to saddle top, along seat tube) · B setback (saddle nose behind BB plumb line) · C saddle nose to hoods · D saddle-to-bar drop · E frame stack · F frame reach</p>
+          </aside>
+        </div>
+      </section>
+
+      <!-- Sessions -->
+      <section id="tab-sessions" class="tab" hidden>
+        <form id="new-session" class="toolbar">
+          <input id="new-label" placeholder="New session label, e.g. Saddle +5mm" required>
+          <button>New session</button>
+          <span class="muted small">Copies the current measurements, so you only change what you adjusted.</span>
+        </form>
+        <table class="sessions">
+          <thead><tr><th>A</th><th>B</th><th>Session</th><th>Bike</th><th></th></tr></thead>
+          <tbody id="session-rows"></tbody>
+        </table>
+        <h3>Compare A → B</h3>
+        <div id="compare" class="muted">Pick an A and a B session above.</div>
+      </section>
+    </div>
+
+    <!-- Chat -->
+    <aside class="chat">
+      <div class="chat-head">
+        <h2>Fit coach</h2>
+        <button id="guided-btn" class="primary">Start guided fit</button>
+      </div>
+      <div id="messages" class="messages" aria-live="polite"></div>
+      <div id="chips" class="chips"></div>
+      <form id="chat-form">
+        <textarea id="chat-input" rows="2" placeholder="Ask the coach… (Enter to send)"></textarea>
+        <button class="primary">Send</button>
+      </form>
+    </aside>
+  </main>
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>
